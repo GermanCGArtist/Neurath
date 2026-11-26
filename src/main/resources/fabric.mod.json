@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "neurath",
+  "version": "${version}",
+  "name": "Neurath",
+  "description": "JourneyMap transit network & octilinear diagram addon with area/standalone Spectate, built on the Liskov UI library.",
+  "authors": ["Julian"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.neurath.NeurathMod"
+    ],
+    "client": [
+      "dev.neurath.client.NeurathClientMod"
+    ],
+    "journeymap": [
+      "dev.neurath.client.jm.NeurathJourneyMapPlugin"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "${minecraft_dep}",
+    "fabric-api": "*",
+    "liskov": ">=0.2.0"
+  },
+  "suggests": {
+    "journeymap": "*"
+  }
+}

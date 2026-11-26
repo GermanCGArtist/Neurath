@@ -1,0 +1,64 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+version = "${project.mod_version}+mc${project.minecraft_version}"
+group = project.maven_group
+base { archivesName = project.archives_base_name }
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        name = 'Fabric'
+        url = 'https://maven.fabricmc.net/'
+    }
+    maven {
+        name = 'JourneyMap (Public)'
+        url = 'https://jm.gserv.me/repository/maven-public/'
+    }
+}
+
+dependencies {
+    // Minecraft 26.1+ is unobfuscated: no mappings
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    // Liskov (shared ImGui UI host, MubTheme, Drives FS, VCS, liskov:sync)
+    compileOnly "dev.liskov:liskov:${project.liskov_version}"
+    implementation "dev.liskov:liskov-core:${project.liskov_version}"
+    compileOnly "dev.liskov:liskov-net:${project.liskov_version}"
+    compileOnly "io.github.spair:imgui-java-binding:${project.imgui_version}"
+
+    // JourneyMap API (soft compile-only dependency)
+    compileOnly "info.journeymap:journeymap-api-fabric:${project.journeymap_api_version}"
+
+    // Gson & Unit tests
+    implementation "com.google.code.gson:gson:2.11.0"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.11.4"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+processResources {
+    def props = [version: project.version, minecraft_dep: project.minecraft_dep]
+    inputs.properties props
+    filesMatching('fabric.mod.json') {
+        expand props
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+    withSourcesJar()
+}
